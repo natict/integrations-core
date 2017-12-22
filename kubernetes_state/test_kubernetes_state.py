@@ -6,11 +6,15 @@
 import mock
 import os
 
+# 3p
+from nose.plugins.attrib import attr
+
 # project
 from tests.checks.common import AgentCheckTest
 
 NAMESPACE = 'kubernetes_state'
 
+@attr(requires='kubernetes_state')
 class TestKubernetesState(AgentCheckTest):
 
     CHECK_NAME = 'kubernetes_state'
@@ -101,7 +105,8 @@ class TestKubernetesState(AgentCheckTest):
             }]
         }
 
-        self.run_check(config)
+        # run check twice to have pod/node mapping
+        self.run_check_twice(config)
 
         self.assertServiceCheck(NAMESPACE + '.node.ready', self.check.OK)
         self.assertServiceCheck(NAMESPACE + '.node.out_of_disk', self.check.OK)
@@ -134,7 +139,8 @@ class TestKubernetesState(AgentCheckTest):
             }]
         }
 
-        self.run_check(config)
+        # run check twice to have pod/node mapping
+        self.run_check_twice(config)
 
         self.assertServiceCheck(NAMESPACE + '.node.ready', self.check.OK)
         self.assertServiceCheck(NAMESPACE + '.node.out_of_disk', self.check.OK)
